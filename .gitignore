@@ -1,0 +1,5 @@
+project/target
+project/project/target
+node_modules
+.idea
+target
