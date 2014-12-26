@@ -25,6 +25,8 @@ import com.twitter.finagle.tracing.Trace
 /**
  * Created by kenny.lee on 2014/11/14.
  */
+// VM Option with zipkin
+// -Dcom.twitter.finagle.zipkin.host=192.168.1.9:9410 -Dcom.twitter.finagle.zipkin.initialSampleRate=1.0
 
 class Respond extends Service[HttpRequest, HttpResponse] {
   def apply(request: HttpRequest) = {
@@ -43,8 +45,6 @@ object Server {
    // val myService: Service[HttpRequest, HttpResponse] =  respond
     println("server")
 
-
-
     val runtime = RuntimeEnvironment(this, Array[String]())
     val admin = new AdminServiceFactory (
       8080,
@@ -57,6 +57,7 @@ object Server {
       def apply(req: HttpRequest): Future[HttpResponse] = {
         val response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, OK)
         response.setContent(copiedBuffer("hello world", Utf8))
+        println("Request")
         Stats.incr("widgets_sold", 5)
         Future.value(response)
       }
@@ -70,6 +71,7 @@ object Server {
     server.announce("zk!localhost:2181!/finagle!0")
     // Trace.pushTracer(zipkinTracer)
     Await.ready(server)
+    server.close()
 
   /* val runtime = RuntimeEnvironment(this, Array[String]())
     val admin = new AdminServiceFactory (

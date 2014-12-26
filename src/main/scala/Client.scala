@@ -10,6 +10,10 @@ import com.twitter.finagle.http
 /**
  * Created by kenny.lee on 2014/11/17.
  */
+
+//VM option with zipkin
+//-Dcom.twitter.finagle.zipkin.host=192.168.1.9:9410 -Dcom.twitter.finagle.zipkin.initialSampleRate=1.0
+
 object Client {
   def main(args: Array[String]): Unit = {
     val dest = Resolver.eval("zk!localhost:2181!/finagle")
