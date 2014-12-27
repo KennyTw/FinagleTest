@@ -21,6 +21,7 @@ import com.twitter.finagle.stats.OstrichStatsReceiver
 import com.twitter.ostrich.stats.StatsCollection
 import com.twitter.util.{Await, Future}
 import com.twitter.finagle.tracing.Trace
+import org.jboss.netty.util.CharsetUtil
 
 /**
  * Created by kenny.lee on 2014/11/14.
@@ -43,7 +44,7 @@ object Server {
  //   val zipkinTracer = ZipkinTracer.mk(host = "192.168.1.104", port = 9410, sampleRate = 1.0f)
   //  val respond = new Respond
    // val myService: Service[HttpRequest, HttpResponse] =  respond
-    println("server")
+    println("server start")
 
     val runtime = RuntimeEnvironment(this, Array[String]())
     val admin = new AdminServiceFactory (
@@ -57,9 +58,14 @@ object Server {
       def apply(req: HttpRequest): Future[HttpResponse] = {
         val response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, OK)
         response.setContent(copiedBuffer("hello world", Utf8))
-        println("Request")
         Stats.incr("widgets_sold", 5)
-        Future.value(response)
+        println("URL : " + req.getUri())
+        if (req.getUri() == "/exit") {
+          System.exit(0)
+          Future.exception(new Exception("exit"))
+        } else {
+          Future.value(response)
+        }
       }
     }
 

@@ -22,15 +22,18 @@ object Client {
       com.twitter.finagle.Http.newService(dest, "FinagleClient")
 
     val request =  new DefaultHttpRequest(
-      HttpVersion.HTTP_1_1, HttpMethod.GET, "/")
+      HttpVersion.HTTP_1_1, HttpMethod.GET, "/exitt")
 
     val response: Future[HttpResponse] = client(request)
     response onSuccess { resp: HttpResponse =>
       println("GET success: " + resp.getStatus())
-      val  content = resp.getContent()
+      val content = resp.getContent()
       if (content.readable()) {
         println(content.toString(CharsetUtil.UTF_8))
       }
+    }
+    response onFailure { cause: Throwable =>
+      println("failed with " + cause)
     }
     Await.ready(response)
     client.close()
