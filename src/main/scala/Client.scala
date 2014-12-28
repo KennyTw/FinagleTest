@@ -16,27 +16,32 @@ import com.twitter.finagle.http
 
 object Client {
   def main(args: Array[String]): Unit = {
-    val dest = Resolver.eval("zk!localhost:2181!/finagle")
+    //val dest = Resolver.eval("zk!localhost:2181!/finagle")
+    val dest = Resolver.eval("zk!54.65.124.82:2181!/finagle")
 
-    val client: Service[HttpRequest, HttpResponse] =
-      com.twitter.finagle.Http.newService(dest, "FinagleClient")
+      val client: Service[HttpRequest, HttpResponse] =
+         com.twitter.finagle.Http.newService(dest, "FinagleClient")
 
-    val request =  new DefaultHttpRequest(
-      HttpVersion.HTTP_1_1, HttpMethod.GET, "/exitt")
+      val request =  new DefaultHttpRequest(
+        HttpVersion.HTTP_1_1, HttpMethod.GET, "/exit2")
 
-    val response: Future[HttpResponse] = client(request)
-    response onSuccess { resp: HttpResponse =>
-      println("GET success: " + resp.getStatus())
-      val content = resp.getContent()
-      if (content.readable()) {
-        println(content.toString(CharsetUtil.UTF_8))
+      for (i <- 1 to 40) {
+        println("GO:" + i)
+        val response: Future[HttpResponse] = client(request)
+        response onSuccess { resp: HttpResponse =>
+          println("GET success: " + resp.getStatus())
+          val content = resp.getContent()
+          if (content.readable()) {
+            println(content.toString(CharsetUtil.UTF_8))
+          }
+        }
+        response onFailure { cause: Throwable =>
+          println("failed with " + cause)
+        }
+        Await.ready(response)
+        Thread.sleep(1000)
       }
-    }
-    response onFailure { cause: Throwable =>
-      println("failed with " + cause)
-    }
-    Await.ready(response)
-    client.close()
 
+      client.close()
   }
 }

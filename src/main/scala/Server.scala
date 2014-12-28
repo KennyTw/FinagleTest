@@ -1,4 +1,6 @@
 import java.net.InetSocketAddress
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 import com.sun.net.httpserver.HttpServer
 import com.twitter.common.quantity.{Time, Amount}
@@ -59,7 +61,12 @@ object Server {
         val response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, OK)
         response.setContent(copiedBuffer("hello world", Utf8))
         Stats.incr("widgets_sold", 5)
-        println("URL : " + req.getUri())
+
+        val today = Calendar.getInstance().getTime()
+        val nowtime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+        val currentTimeStr = nowtime.format(today)
+
+        println(currentTimeStr + " URL : " + req.getUri())
         if (req.getUri() == "/exit") {
           System.exit(0)
           Future.exception(new Exception("exit"))
@@ -74,7 +81,8 @@ object Server {
 
    // Trace.recordServiceName("kenny")
     val server = Http.serve("FinagleServer=:3006", service)
-    server.announce("zk!localhost:2181!/finagle!0")
+    //server.announce("zk!localhost:2181!/finagle!0")
+    server.announce("zk!54.65.124.82:2181!/finagle!0")
     // Trace.pushTracer(zipkinTracer)
     Await.ready(server)
     server.close()

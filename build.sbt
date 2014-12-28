@@ -16,6 +16,6 @@ libraryDependencies += "com.twitter" %% "finagle-serversets" % "6.22.0"
 
 libraryDependencies += "com.twitter.common.zookeeper" % "server-set" % "1.0.9"
 
-javaOptions in run += "-Dcom.twitter.finagle.zipkin.host=192.168.1.9:9410"
+//javaOptions in run += "-Dcom.twitter.finagle.zipkin.host=192.168.1.9:9410"
 
-javaOptions in run += "-Dcom.twitter.finagle.zipkin.initialSampleRate=1.0"
+//javaOptions in run += "-Dcom.twitter.finagle.zipkin.initialSampleRate=1.0"
