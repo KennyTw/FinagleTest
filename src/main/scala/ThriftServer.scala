@@ -9,7 +9,7 @@ import com.twitter.finagle.example.thriftscala.Hello
 object ThriftServer {
   def main(args: Array[String]): Unit = {
     //#thriftserverapi
-    val server = Thrift.serveIface("localhost:8080", new Hello[Future] {
+    val server = Thrift.serveIface("FinagleThriftServer=:8080", new Hello[Future] {
       def hi() = Future.value("hi")
     })
     Await.ready(server)
