@@ -27,7 +27,7 @@ class TimeoutFilter[Req, Rep](timeout: Duration, timer: Timer)
   }
 }
 
-object Hello extends App {
+object HelloTest extends App {
 
   val retry = new RetryingFilter[String, String](
     retryPolicy = RetryPolicy.tries(3),

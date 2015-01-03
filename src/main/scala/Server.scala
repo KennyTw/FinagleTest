@@ -50,7 +50,7 @@ object Server {
 
     val runtime = RuntimeEnvironment(this, Array[String]())
     val admin = new AdminServiceFactory (
-      8080,
+      8081,
       statsNodes = List(new StatsFactory(
         reporters = List(new TimeSeriesCollectorFactory())
       ))
@@ -82,7 +82,7 @@ object Server {
    // Trace.recordServiceName("kenny")
     val server = Http.serve("FinagleServer=:3006", service)
     //server.announce("zk!localhost:2181!/finagle!0")
-    server.announce("zk!54.65.124.82:2181!/finagle!0")
+    //server.announce("zk!54.65.124.82:2181!/finagle!0")
     // Trace.pushTracer(zipkinTracer)
     Await.ready(server)
     server.close()

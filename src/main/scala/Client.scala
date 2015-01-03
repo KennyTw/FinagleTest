@@ -17,7 +17,8 @@ import com.twitter.finagle.http
 object Client {
   def main(args: Array[String]): Unit = {
     //val dest = Resolver.eval("zk!localhost:2181!/finagle")
-    val dest = Resolver.eval("zk!54.65.124.82:2181!/finagle")
+    //val dest = Resolver.eval("zk!54.65.124.82:2181!/finagle")
+    val dest = Resolver.eval("inet!127.0.0.1:3006")
 
       val client: Service[HttpRequest, HttpResponse] =
          com.twitter.finagle.Http.newService(dest, "FinagleClient")

@@ -3,3 +3,6 @@ project/project/target
 node_modules
 .idea
 target
+.classpath
+.project
+.settings/org.scala-ide.sdt.core.prefs
