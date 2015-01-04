@@ -2,35 +2,25 @@
  * Created by kenny.lee on 2015/1/2.
  */
 
-import com.twitter.finagle.Thrift
+import com.twitter.finagle.{Resolver, Thrift, Service}
+import com.twitter.finagle.example.thriftscala.Hello.FinagledClient
 import com.twitter.util.{Await, Future}
 import com.twitter.finagle.example.thriftscala.Hello
-import com.twitter.finagle.Service
 
 object ThriftClient {
   def main(args: Array[String]): Unit = {
     //#thriftclientapi
-    val client = Thrift.newIface[Hello.FutureIface]("localhost:8080", "ThriftClient")
-
-    /*val rawSvc: Service[Int,String] = Service.mk[Int, String] { int: Int => client.hi() }
-
-    val response: Future[String] = rawSvc.apply(0)
-    response onSuccess { response =>
-      println("Received response: " + response)
-    }
-
-    response onFailure  { cause: Throwable =>
-      println("failed with " + cause)
-    }
-
-    Await.result(response)
-    rawSvc.close()*/
-
-
+    val dest = Resolver.eval("inet!127.0.0.1:8080")
+    val service = Thrift.newService(dest,"ThriftClient")
+    //val clientIface = Thrift.newIface[Hello.FutureIface]("localhost:8080")
+    val client = new FinagledClient(service)
 
     val response: Future[String] = client.hi()
     response onSuccess { response =>
       println("Received response: " + response)
+    }  ensure {
+      service.close()
+      println("service close")
     }
 
     response onFailure  { cause: Throwable =>
@@ -38,10 +28,8 @@ object ThriftClient {
     }
 
     Await.result(response)
-
-
+    Thread.sleep(100)
     //#thriftclientapi
-    //Thrift.newService()
 
   }
 }

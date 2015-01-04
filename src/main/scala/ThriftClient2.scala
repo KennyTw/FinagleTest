@@ -15,13 +15,14 @@ object ThriftClient2 {
 
   def main(args: Array[String]): Unit = {
 
-    val zipkinTracer = ZipkinTracer.mk(host = "192.168.1.9", port = 9410, sampleRate = 1.0f)
+   // val zipkinTracer = ZipkinTracer.mk(host = "192.168.1.9", port = 9410, sampleRate = 1.0f)
+
     val service: Service[ThriftClientRequest, Array[Byte]] = ClientBuilder()
       .hosts(new InetSocketAddress("localhost", 8080))
       .codec(ThriftClientFramedCodec())
       .hostConnectionLimit(1)
       .name("ThriftClient2")
-      .tracer(zipkinTracer)
+    //  .tracer(zipkinTracer)
       .build()
 
     val client = new FinagledClient(service, new TBinaryProtocol.Factory(),"ThriftClient2")
